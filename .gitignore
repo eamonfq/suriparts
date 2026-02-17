@@ -1,6 +1,10 @@
 node_modules/
 dist/
+server/db/suriparts.db
+server/db/suriparts.db-shm
+server/db/suriparts.db-wal
 server/database.sqlite
 .env
 *.log
 .DS_Store
+package-lock.json
