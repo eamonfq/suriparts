@@ -30,6 +30,17 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Serve frontend in production
+if (process.env.NODE_ENV === 'production') {
+  const clientDist = join(__dirname, '..', 'client', 'dist');
+  app.use(express.static(clientDist));
+
+  // SPA fallback — any non-API route serves index.html
+  app.get('*', (req, res) => {
+    res.sendFile(join(clientDist, 'index.html'));
+  });
+}
+
 app.listen(PORT, () => {
-  console.log(`SuriParts API running on http://localhost:${PORT}`);
+  console.log(`SuriParts running on http://localhost:${PORT} [${process.env.NODE_ENV || 'development'}]`);
 });

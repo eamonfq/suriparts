@@ -96,7 +96,16 @@ if (existsSync(dbPath)) {
   const buffer = readFileSync(dbPath);
   sqlDb = new SQL.Database(buffer);
 } else {
+  // Auto-create database with schema if it doesn't exist
   sqlDb = new SQL.Database();
+  const schemaPath = join(__dirname, '..', 'db', 'schema.sql');
+  if (existsSync(schemaPath)) {
+    const schema = readFileSync(schemaPath, 'utf-8');
+    sqlDb.exec(schema);
+    const data = sqlDb.export();
+    writeFileSync(dbPath, Buffer.from(data));
+    console.log('Database created from schema.sql');
+  }
 }
 
 const db = new DatabaseWrapper(sqlDb, dbPath);
